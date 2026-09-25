@@ -1,0 +1,431 @@
+{%- doc -%}
+  Figma-derived styling overrides for the product hero (buybox) layout.
+
+  All rules are scoped under `.product-information` so the base theme's product card,
+  quick add and featured product surfaces are untouched.
+
+  @example
+  {% render 'product-hero-styles' %}
+{%- enddoc -%}
+
+{% stylesheet %}
+  /* ---------------------------------------------------------------- Media */
+
+  .product-information .product-information__media {
+    position: relative;
+  }
+
+  .product-information .product-media-container {
+    background: #f1e8da;
+  }
+
+  /* The gallery forces `object-fit: cover` whenever a fixed aspect ratio is set.
+     The design keeps the packshot fully visible inside the beige tile. */
+  .product-information .media-fit-cover :is(img, video, .deferred-media__poster-image) {
+    object-fit: contain;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-information .product-information__media .media-gallery {
+      padding-block-start: 0;
+    }
+  }
+
+  /* The design shows the dot indicator on the media *and* the thumbnail strip below it.
+     The gallery renders one control set per breakpoint and hides the other with the
+     `mobile:hidden` / `desktop:hidden` utilities, which are `!important` in base.css —
+     so `!important` is required here to bring both sets back at every breakpoint. */
+  @media screen and (max-width: 749px) {
+    /* stylelint-disable-next-line declaration-no-important */
+    .product-information slideshow-controls.mobile\:hidden {
+      display: flex !important;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    /* stylelint-disable-next-line declaration-no-important */
+    .product-information slideshow-controls.desktop\:hidden {
+      display: flex !important;
+    }
+  }
+
+  /* -------------------------------------------------------- Carousel dots */
+
+  .product-information slideshow-controls:has(.slideshow-controls__dots) {
+    mix-blend-mode: normal;
+  }
+
+  .product-information .slideshow-controls__dots {
+    gap: 6px;
+    padding: 12px 16px;
+    border-radius: 0;
+  }
+
+  .product-information .slideshow-controls__dots button {
+    --size: 6px;
+    --color: rgb(35 31 32 / 0.2);
+    --color-active: #231f20;
+    --color-hover: rgb(35 31 32 / 0.4);
+  }
+
+  .product-information .slideshow-controls__dots button::after {
+    box-shadow: none;
+  }
+
+  .product-information .slideshow-controls__dots button[aria-selected='true'] {
+    width: calc(var(--size) * 3);
+  }
+
+  .product-information .slideshow-controls__dots button[aria-selected='true']::after {
+    width: calc(var(--size) * 3);
+    border-radius: calc(var(--size) / 2);
+  }
+
+  @media screen and (min-width: 750px) {
+    .product-information .slideshow-controls__dots {
+      gap: 8px;
+      padding: 16px 24px;
+    }
+
+    .product-information .slideshow-controls__dots button {
+      --size: 8px;
+    }
+  }
+
+  /* -------------------------------------------------------- Thumbnail row */
+
+  .product-information .slideshow-controls__thumbnails-container {
+    overflow-x: auto;
+  }
+
+  .product-information .slideshow-controls__thumbnails {
+    gap: 8px;
+    margin-inline: 0;
+    padding-inline: 0;
+    padding-block: 12px 8px;
+  }
+
+  .product-information .slideshow-controls__thumbnails .slideshow-control {
+    width: 64px;
+    aspect-ratio: 1;
+    border-radius: 2px;
+    background: #f1e8da;
+    overflow: hidden;
+  }
+
+  .product-information .slideshow-controls__thumbnails .slideshow-control img {
+    object-fit: contain;
+    border-radius: 2px;
+  }
+
+  .product-information .slideshow-controls__thumbnails .slideshow-control[aria-selected='true'] {
+    outline: none;
+    border: 1.5px solid #231f20;
+  }
+
+  @media screen and (min-width: 750px) {
+    .product-information .slideshow-controls__thumbnails {
+      gap: 12px;
+      padding-block: 20px 0;
+    }
+
+    .product-information .slideshow-controls__thumbnails .slideshow-control {
+      width: 72px;
+    }
+  }
+
+  /* ------------------------------------------------------ Details column */
+
+  @media screen and (max-width: 749px) {
+    .product-information.section--page-width .product-details > .group-block.spacing-style {
+      padding-inline: var(--padding-inline-start, 20px) var(--padding-inline-end, 20px);
+      background: #fcf9f5;
+    }
+
+    /* Mobile stacks the price directly under the title group, above the options */
+    .product-information .product-details .group-block-content > * {
+      order: 3;
+    }
+
+    .product-information .product-details .group-block-content > .view-product-title {
+      order: 0;
+    }
+
+    .product-information .product-details .group-block-content > .view-product-title + * {
+      order: 1;
+    }
+
+    .product-information .product-details .group-block-content > .view-product-title + * + *,
+    .product-information .product-details .group-block-content > product-price {
+      order: 2;
+    }
+  }
+
+  /* -------------------------------------------------------- Title & intro */
+
+  .product-information .product-details h1 {
+    font-family: var(--font-heading--family);
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 40px;
+    letter-spacing: -1.2px;
+    color: #231f20;
+    margin: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-information .product-details h1 {
+      font-size: 28px;
+      line-height: 28px;
+      letter-spacing: -0.84px;
+    }
+  }
+
+  .product-information .product-details .text-block.custom-typography {
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: 0.14px;
+    color: #231f20;
+  }
+
+  /* ------------------------------------------------------- Review rating */
+
+  .product-information .product-details .rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .product-information .product-details .stars {
+    color: #14495b;
+    gap: 1px;
+  }
+
+  .product-information .product-details .stars svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .product-information .product-details .rating-count {
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: 0.14px;
+    margin: 0;
+  }
+
+  .product-information .product-details .rating-count-separator {
+    display: none;
+  }
+
+  /* ------------------------------------------------------ Variant picker */
+
+  .product-information .variant-option + .variant-option {
+    margin-top: 16px;
+  }
+
+  .product-information .variant-option--buttons {
+    gap: 8px;
+  }
+
+  .product-information .variant-option--buttons legend {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-block-end: 16px;
+    text-transform: uppercase;
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: 0.14px;
+    color: #231f20;
+  }
+
+  .product-information .variant-option__swatch-value {
+    padding-inline-start: 0;
+    text-transform: none;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0;
+    color: #231f20;
+  }
+
+  /* The base theme animates a sliding pill and draws fake borders with pseudo elements.
+     The design uses flat borders, so both are neutralised and real borders are used. */
+  .product-information .variant-option__button-label__pill {
+    display: none;
+  }
+
+  .product-information .variant-option__button-label:not(.variant-option__button-label--has-swatch)::before,
+  .product-information .variant-option__button-label:not(.variant-option__button-label--has-swatch)::after {
+    content: none;
+  }
+
+  .product-information .variant-option__button-label {
+    flex: 0 0 auto;
+    min-height: 0;
+    border-radius: 0;
+    background: #fff;
+    color: #231f20;
+    transition: none;
+  }
+
+  /* Swatch pills (scent) */
+  .product-information .variant-option__button-label--has-swatch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border: 1px solid #d1d1d4;
+  }
+
+  .product-information .variant-option__button-label--has-swatch:hover {
+    border-color: #231f20;
+    background: #fff;
+    color: #231f20;
+  }
+
+  .product-information .variant-option__button-label--has-swatch:has(:checked) {
+    border: 2px solid #2e5525;
+    padding: 11px;
+  }
+
+  .product-information .variant-option__button-label--has-swatch .swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 0;
+    flex-shrink: 0;
+  }
+
+  .product-information .variant-option__button-label--has-swatch .variant-option__button-label__text,
+  .product-information .variant-option__button-label--has-swatch .swatch ~ * {
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  /* Count pills */
+  .product-information .variant-option__button-label:not(.variant-option__button-label--has-swatch) {
+    justify-content: center;
+    align-items: center;
+    padding: 8px 10px;
+    min-width: 78px;
+    border: 1px solid #e0e6ed;
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .product-information .variant-option__button-label:not(.variant-option__button-label--has-swatch):hover {
+    border-color: #14495b;
+    background: #fff;
+    color: #231f20;
+  }
+
+  .product-information .variant-option__button-label:not(.variant-option__button-label--has-swatch):has(:checked),
+  .product-information
+    .variant-option__button-label:not(.variant-option__button-label--has-swatch):has(:checked):hover {
+    background: #14495b;
+    border: 2px solid #14495b;
+    color: #fff;
+  }
+
+  @media screen and (min-width: 750px) {
+    .product-information .variant-option__button-label:not(.variant-option__button-label--has-swatch) {
+      padding: 16px;
+      min-width: 106px;
+      font-size: 16px;
+      line-height: 20px;
+    }
+  }
+
+  /* --------------------------------------------------------------- Price */
+
+  .product-information .product-details product-price {
+    display: block;
+  }
+
+  .product-information .product-details product-price .price {
+    font-family: var(--font-heading--family);
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 40px;
+    letter-spacing: -1.2px;
+    color: #231f20;
+  }
+
+  .product-information .product-details product-price .unit-price {
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: 0.14px;
+    opacity: 0.6;
+    margin-inline-start: 6px;
+    align-self: flex-end;
+  }
+
+  /* --------------------------------------------------------- Buy buttons */
+
+  .product-information .product-form-buttons .quantity-selector-wrapper,
+  .product-information .product-form-buttons .quantity-label,
+  .product-information .product-form-buttons .quantity-rules {
+    display: none;
+  }
+
+  .product-information .product-form-buttons .add-to-cart-button {
+    min-height: 48px;
+    padding: 12px 24px;
+    font-family: var(--font-body--family);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+  }
+
+  .product-information .add-to-cart-text__price {
+    white-space: nowrap;
+  }
+
+  /* ----------------------------------------------------------- Accordion */
+
+  .product-information .product-details .accordion .details__header {
+    font-family: var(--font-subheading--family);
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 24px;
+    text-transform: uppercase;
+    padding-block: 16px;
+    color: #231f20;
+  }
+
+  .product-information .product-details .accordion .details__header .svg-wrapper svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .product-information .product-details .accordion .details-content {
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    color: #231f20;
+  }
+
+  @media screen and (min-width: 750px) {
+    .product-information .product-details .accordion .details__header {
+      font-size: 32px;
+      line-height: 32px;
+    }
+
+    .product-information .product-details .accordion .details-content {
+      padding-block-end: 32px;
+    }
+  }
+{% endstylesheet %}

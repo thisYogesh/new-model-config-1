@@ -10,7 +10,18 @@
   assign scoped_class = block.settings.style_class | append: '--' | append: block.id
   assign class = 'add-to-cart-button ' | append: block.settings.style_class | append: ' ' | append: scoped_class
   assign id = 'BuyButtons-ProductSubmitButton-' | append: block.id
+  assign button_text = add_to_cart_text
 %}
+
+{%- if block.settings.show_price and can_add_to_cart -%}
+  {%- capture button_text -%}
+    {{ add_to_cart_text }}
+    <span class="add-to-cart-text__price">
+      <span aria-hidden="true">|</span>
+      {{ closest.product.selected_or_first_available_variant.price | money }}
+    </span>
+  {%- endcapture -%}
+{%- endif -%}
 {% render 'button-custom-styles', block_settings: block.settings, block_id: block.id %}
 {% render 'add-to-cart-button-styles' %}
 {% render 'fly-to-cart-styles' %}
@@ -25,7 +36,7 @@
     can_add_to_cart: can_add_to_cart,
     show_icon: can_add_to_cart,
     product: closest.product,
-    add_to_cart_text: add_to_cart_text,
+    add_to_cart_text: button_text,
     data_testid: 'standalone-add-to-cart'
   %}
 </span>
@@ -55,6 +66,12 @@
       ],
       "default": "button-secondary",
       "info": "t:info.edit_button_style_in_theme_settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show price in button",
+      "default": false
     },
     {
       "type": "header",

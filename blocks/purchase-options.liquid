@@ -1,0 +1,428 @@
+<script
+  src="{{ 'purchase-options.js' | asset_url }}"
+  type="module"
+></script>
+
+{% liquid
+  assign po_product = closest.product
+  assign po_variant = po_product.selected_or_first_available_variant
+  assign po_group = po_product.selling_plan_groups.first
+  assign po_plan = po_group.selling_plans.first
+  assign po_allocation = po_variant.selling_plan_allocations.first
+  assign po_subscription_price = po_allocation.price | default: po_variant.price
+  assign po_default_plan_id = ''
+  if block.settings.default_selection == 'subscribe'
+    assign po_default_plan_id = po_plan.id
+  endif
+  assign po_form_id = 'BuyButtons-ProductForm-' | append: section.id
+%}
+
+{% if po_group != blank and po_variant != blank %}
+  <purchase-options
+    class="purchase-options spacing-style"
+    style="{% render 'spacing-style', settings: block.settings %}"
+    data-selected="{% if block.settings.default_selection == 'one_time' %}one-time{% else %}subscribe{% endif %}"
+    {{ block.shopify_attributes }}
+  >
+    <input
+      type="hidden"
+      name="selling_plan"
+      ref="sellingPlanInput"
+      form="{{ po_form_id }}"
+      value="{{ po_default_plan_id }}"
+    >
+
+    <label class="purchase-options__card purchase-options__card--subscribe">
+      {% if block.settings.badge_text != blank %}
+        <span class="purchase-options__badge">{{ block.settings.badge_text }}</span>
+      {% endif %}
+
+      <span class="purchase-options__header">
+        <span class="purchase-options__option">
+          <input
+            type="radio"
+            class="purchase-options__radio-input"
+            name="purchase_option_{{ block.id }}"
+            value="subscribe"
+            ref="subscribeRadio"
+            on:change="/selectSubscribe"
+            {% if block.settings.default_selection != 'one_time' %}
+              checked
+            {% endif %}
+          >
+          <span class="purchase-options__radio" aria-hidden="true"></span>
+          <span class="purchase-options__label purchase-options__label--strong">
+            {{- block.settings.subscribe_label -}}
+          </span>
+        </span>
+        <span class="purchase-options__prices">
+          <s class="purchase-options__price-compare">{{ po_variant.price | money }}</s>
+          <span class="purchase-options__price-sale">{{ po_subscription_price | money }}</span>
+        </span>
+      </span>
+
+      {% assign po_benefits = block.settings.benefit_1 | append: '|' | append: block.settings.benefit_2 | append: '|' | append: block.settings.benefit_3 | split: '|' %}
+      {% if po_benefits.size > 0 %}
+        <span class="purchase-options__benefits">
+          {% for po_benefit in po_benefits %}
+            {% assign po_benefit_text = po_benefit | strip %}
+            {% if po_benefit_text != blank %}
+              <span class="purchase-options__benefit">
+                <span class="purchase-options__benefit-icon">
+                  {{- 'fi-rs-check.svg' | inline_asset_content -}}
+                </span>
+                {{ po_benefit_text }}
+              </span>
+            {% endif %}
+          {% endfor %}
+        </span>
+      {% endif %}
+
+      <span class="purchase-options__select">
+        <select
+          class="purchase-options__select-input"
+          ref="frequencySelect"
+          on:change="/changeFrequency"
+          aria-label="Delivery frequency"
+        >
+          {% for po_selling_plan in po_group.selling_plans %}
+            <option value="{{ po_selling_plan.id }}">{{ po_selling_plan.name }}</option>
+          {% endfor %}
+        </select>
+        <span class="purchase-options__select-icon" aria-hidden="true">
+          {{- 'fi-rs-angle-down.svg' | inline_asset_content -}}
+        </span>
+      </span>
+    </label>
+
+    <label class="purchase-options__card purchase-options__card--one-time">
+      <span class="purchase-options__header">
+        <span class="purchase-options__option">
+          <input
+            type="radio"
+            class="purchase-options__radio-input"
+            name="purchase_option_{{ block.id }}"
+            value="one-time"
+            ref="oneTimeRadio"
+            on:change="/selectOneTime"
+            {% if block.settings.default_selection == 'one_time' %}
+              checked
+            {% endif %}
+          >
+          <span class="purchase-options__radio" aria-hidden="true"></span>
+          <span class="purchase-options__label">{{ block.settings.one_time_label }}</span>
+        </span>
+        <span class="purchase-options__prices purchase-options__prices--single">
+          <span class="purchase-options__price-regular">{{ po_variant.price | money }}</span>
+        </span>
+      </span>
+    </label>
+  </purchase-options>
+{% endif %}
+
+{% stylesheet %}
+  .purchase-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .purchase-options__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: #fcf9f5;
+    border: 1px solid #9b9a9a;
+    padding: 20px 16px;
+    cursor: pointer;
+  }
+
+  .purchase-options__card--subscribe {
+    border-color: #231f20;
+    padding: 40px 16px 24px;
+  }
+
+  .purchase-options__badge {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e9ea6b;
+    color: #231f20;
+    padding: 6px 12px;
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 14px;
+    text-transform: uppercase;
+  }
+
+  .purchase-options__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .purchase-options__option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .purchase-options__radio-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .purchase-options__radio {
+    position: relative;
+    display: block;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid #e0e6ed;
+  }
+
+  .purchase-options__option:has(.purchase-options__radio-input:checked) .purchase-options__radio {
+    border: 2px solid #231f20;
+  }
+
+  .purchase-options__option:has(.purchase-options__radio-input:checked) .purchase-options__radio::after {
+    content: '';
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #231f20;
+  }
+
+  .purchase-options__radio-input:focus-visible ~ .purchase-options__radio {
+    outline: var(--focus-outline-width) solid currentcolor;
+    outline-offset: 2px;
+  }
+
+  .purchase-options__label {
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    color: #231f20;
+  }
+
+  .purchase-options__label--strong {
+    font-weight: 600;
+  }
+
+  .purchase-options__prices {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .purchase-options__price-compare {
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    color: #8f928f;
+    text-decoration: line-through;
+  }
+
+  .purchase-options__price-sale {
+    font-family: var(--font-body--family);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    color: #c24829;
+  }
+
+  .purchase-options__price-regular {
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    color: #231f20;
+  }
+
+  .purchase-options__benefits {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .purchase-options__benefit {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    color: #656363;
+  }
+
+  .purchase-options__benefit-icon {
+    display: flex;
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+  }
+
+  .purchase-options__benefit-icon svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .purchase-options__select {
+    position: relative;
+    display: block;
+    width: 100%;
+  }
+
+  .purchase-options__select-input {
+    appearance: none;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #e0e6ed;
+    border-radius: 0;
+    color: #231f20;
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    padding: 10px 40px 10px 16px;
+    cursor: pointer;
+  }
+
+  .purchase-options__select-icon {
+    position: absolute;
+    inset-inline-end: 16px;
+    inset-block-start: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+  }
+
+  .purchase-options__select-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .purchase-options__prices:not(.purchase-options__prices--single) {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+
+    .purchase-options__prices:not(.purchase-options__prices--single) .purchase-options__price-sale {
+      order: -1;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Purchase options",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "default_selection",
+      "label": "Default selection",
+      "options": [
+        {
+          "value": "subscribe",
+          "label": "Subscribe and save"
+        },
+        {
+          "value": "one_time",
+          "label": "One time purchase"
+        }
+      ],
+      "default": "subscribe"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_label",
+      "label": "Subscription label",
+      "default": "Subscribe & Save 10%"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Best Value"
+    },
+    {
+      "type": "text",
+      "id": "benefit_1",
+      "label": "Benefit 1",
+      "default": "Eco-effective cleaning essentials"
+    },
+    {
+      "type": "text",
+      "id": "benefit_2",
+      "label": "Benefit 2",
+      "default": "Delivered to your doorstep"
+    },
+    {
+      "type": "text",
+      "id": "benefit_3",
+      "label": "Benefit 3",
+      "default": "Flexible - Pause, skip, or cancel anytime"
+    },
+    {
+      "type": "text",
+      "id": "one_time_label",
+      "label": "One time label",
+      "default": "One Time Purchase"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purchase options",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

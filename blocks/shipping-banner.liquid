@@ -1,0 +1,168 @@
+{% liquid
+  assign sb_icons = block.settings.item_1_icon | append: ',' | append: block.settings.item_2_icon | split: ','
+  assign sb_texts = block.settings.item_1_text | append: '|' | append: block.settings.item_2_text | split: '|'
+%}
+
+<div
+  class="shipping-banner spacing-style"
+  style="{% render 'spacing-style', settings: block.settings %}"
+  {{ block.shopify_attributes }}
+>
+  {% for sb_text in sb_texts %}
+    {% assign sb_label = sb_text | strip %}
+    {% if sb_label != blank %}
+      {% assign sb_icon = sb_icons[forloop.index0] %}
+      <span class="shipping-banner__item">
+        {% case sb_icon %}
+          {% when 'truck' %}
+            <span class="shipping-banner__icon">{{ 'fi-rs-truck-side.svg' | inline_asset_content }}</span>
+          {% when 'refresh' %}
+            <span class="shipping-banner__icon">{{ 'fi-rs-refresh.svg' | inline_asset_content }}</span>
+          {% when 'check' %}
+            <span class="shipping-banner__icon">{{ 'fi-rs-check.svg' | inline_asset_content }}</span>
+        {% endcase %}
+        <span class="shipping-banner__text">{{ sb_label }}</span>
+      </span>
+    {% endif %}
+  {% endfor %}
+</div>
+
+{% stylesheet %}
+  .shipping-banner {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    padding-block: 8px;
+  }
+
+  .shipping-banner__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    color: #231f20;
+  }
+
+  .shipping-banner__icon {
+    display: flex;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+  }
+
+  .shipping-banner__icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .shipping-banner {
+      flex-direction: row;
+      justify-content: center;
+      gap: 32px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Shipping banner",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "item_1_icon",
+      "label": "Item 1 icon",
+      "options": [
+        {
+          "value": "truck",
+          "label": "Truck"
+        },
+        {
+          "value": "refresh",
+          "label": "Refresh"
+        },
+        {
+          "value": "check",
+          "label": "Check"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        }
+      ],
+      "default": "truck"
+    },
+    {
+      "type": "text",
+      "id": "item_1_text",
+      "label": "Item 1 text",
+      "default": "Free Shipping Over $35"
+    },
+    {
+      "type": "select",
+      "id": "item_2_icon",
+      "label": "Item 2 icon",
+      "options": [
+        {
+          "value": "truck",
+          "label": "Truck"
+        },
+        {
+          "value": "refresh",
+          "label": "Refresh"
+        },
+        {
+          "value": "check",
+          "label": "Check"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        }
+      ],
+      "default": "refresh"
+    },
+    {
+      "type": "text",
+      "id": "item_2_text",
+      "label": "Item 2 text",
+      "default": "30 Day Money-Back Guarantee"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shipping banner",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

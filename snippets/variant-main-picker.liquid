@@ -5,6 +5,7 @@
   @param {object} [block] - The block object
   @param {object} section - The section object.
   @param {object} product - The current product object (used to determine selected variant state).
+  @param {boolean} [show_savings_badges] - Whether to show a "% OFF" badge on option values that are on sale.
 {%- enddoc -%}
 
 {% assign block_settings = block.settings %}
@@ -163,6 +164,19 @@
                   </span>
                 {% endif %}
                 {% render 'strikethrough-variant', product_option: product_option_value %}
+                {%- if show_savings_badges -%}
+                  {%- liquid
+                    assign option_variant = product_option_value.variant
+                    assign option_savings = 0
+                    if option_variant.compare_at_price > option_variant.price
+                      assign option_savings_amount = option_variant.compare_at_price | minus: option_variant.price
+                      assign option_savings = option_savings_amount | times: 100 | divided_by: option_variant.compare_at_price
+                    endif
+                  -%}
+                  {%- if option_savings > 0 -%}
+                    <span class="variant-option__badge">{{ option_savings }}% OFF</span>
+                  {%- endif -%}
+                {%- endif -%}
               </label>
             {%- endfor -%}
             {% if option_id_attribute %}

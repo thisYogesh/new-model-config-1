@@ -1,3 +1,22 @@
+{%- if block.settings.show_sale_badge -%}
+  {%- liquid
+    assign badge_variant = closest.product.selected_or_first_available_variant
+    assign sale_badge_savings = 0
+    if badge_variant.compare_at_price > badge_variant.price
+      assign sale_badge_difference = badge_variant.compare_at_price | minus: badge_variant.price
+      assign sale_badge_savings = sale_badge_difference | times: 100 | divided_by: badge_variant.compare_at_price
+    endif
+  -%}
+  {%- if sale_badge_savings > 0 -%}
+    <span
+      class="product-media__sale-badge"
+      style="--sale-badge-color: {{ block.settings.sale_badge_color }};"
+    >
+      Save {{ sale_badge_savings }}%
+    </span>
+  {%- endif -%}
+{%- endif -%}
+
 {% render 'product-media-gallery-content',
   media_presentation: block.settings.media_presentation,
   block_settings: block.settings,
@@ -7,11 +26,43 @@
   section: section
 %}
 
+{% stylesheet %}
+  .product-media__sale-badge {
+    position: absolute;
+    inset-block-start: 8px;
+    inset-inline-start: 8px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--sale-badge-color, #e9ea6b);
+    color: #231f20;
+    padding: 6px 12px;
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+  }
+{% endstylesheet %}
+
 {% schema %}
 {
   "name": "t:names.product_media",
   "tag": null,
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_sale_badge",
+      "label": "Show sale badge",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_color",
+      "label": "Sale badge color",
+      "default": "#E9EA6B",
+      "visible_if": "{{ block.settings.show_sale_badge }}"
+    },
     {
       "type": "select",
       "id": "media_presentation",

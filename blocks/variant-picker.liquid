@@ -6,7 +6,12 @@
 -%}
 
 {% unless product_resource == blank %}
-  {% render 'variant-main-picker', product_resource: product_resource, section: section, product: product %}
+  {% render 'variant-main-picker',
+    product_resource: product_resource,
+    section: section,
+    product: product,
+    show_savings_badges: block.settings.show_savings_badges
+  %}
 {% endunless %}
 
 {% schema %}
@@ -39,6 +44,12 @@
       "id": "show_swatches",
       "label": "t:settings.swatches",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_savings_badges",
+      "label": "Show savings badges",
+      "default": false
     },
     {
       "type": "header",
