@@ -273,10 +273,107 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "community_carousel_dropps": {
+      "type": "section",
+      "blocks": {
+        "community_carousel": {
+          "type": "community-carousel",
+          "settings": {
+            "heading": "Join the community @dropps",
+            "heading_color": "#231F20",
+            "background_color": "#FCF9F5",
+            "button_label": "Shop Best Sellers",
+            "button_background": "#9BD7D7",
+            "button_text_color": "#231F20",
+            "show_dots": true,
+            "dot_color": "#231F20",
+            "card_gap": 16,
+            "padding-block-start": 48,
+            "padding-block-end": 48,
+            "padding-inline": 20
+          },
+          "blocks": {
+            "card_1": {
+              "type": "_community-card",
+              "settings": {
+                "card_variant": "media",
+                "background_color": "#FCF9F5",
+                "card_width": 277,
+                "card_height": 435
+              }
+            },
+            "card_2": {
+              "type": "_community-card",
+              "settings": {
+                "card_variant": "promo",
+                "background_color": "#C24829",
+                "promo_heading": "<p>Save 20% on your first order</p>",
+                "promo_heading_color": "#FEF27F",
+                "promo_link_label": "Shop Now",
+                "promo_link_color": "#E9EA6B",
+                "card_width": 277,
+                "card_height": 435
+              }
+            },
+            "card_3": {
+              "type": "_community-card",
+              "settings": {
+                "card_variant": "stacked",
+                "background_color": "#FCF9F5",
+                "card_width": 323,
+                "card_height": 435
+              }
+            },
+            "card_4": {
+              "type": "_community-card",
+              "settings": {
+                "card_variant": "panel",
+                "background_color": "#FCF9F5",
+                "panel_heading": "<p>Refill. Reuse. Repeat.</p>",
+                "panel_link_label": "Shop Now",
+                "panel_background_color": "#482B73",
+                "panel_text_color": "#F4C9E3",
+                "card_width": 277,
+                "card_height": 435
+              }
+            },
+            "card_5": {
+              "type": "_community-card",
+              "settings": {
+                "card_variant": "media",
+                "background_color": "#FCF9F5",
+                "card_width": 277,
+                "card_height": 435
+              }
+            }
+          },
+          "block_order": [
+            "card_1",
+            "card_2",
+            "card_3",
+            "card_4",
+            "card_5"
+          ]
+        }
+      },
+      "block_order": [
+        "community_carousel"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "flex-start",
+        "gap": 0,
+        "section_width": "full-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     }
   },
   "order": [
     "hero_jVaWmY",
-    "product_list_fa6P9H"
+    "product_list_fa6P9H",
+    "community_carousel_dropps"
   ]
 }
