@@ -369,11 +369,151 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "certifications_band": {
+      "type": "section",
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>We didn't need a badge to do the right thing. But we’re glad to have them.</h2>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_size": "3.5rem",
+            "line_height": "tight",
+            "letter_spacing": "normal",
+            "case": "uppercase",
+            "wrap": "pretty",
+            "text_color": "#F1E8DA",
+            "background": false,
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "lower_row": {
+          "type": "group",
+          "settings": {
+            "content_direction": "row",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "space-between",
+            "vertical_alignment": "flex-end",
+            "align_baseline": false,
+            "gap": 40,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "background_media": "none",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "body_text_group": {
+              "type": "group",
+              "settings": {
+                "content_direction": "column",
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "flex-start",
+                "gap": 0,
+                "width": "custom",
+                "custom_width": 30,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "background_media": "none",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "body_text": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Dropps is held to a real standard for how we treat people and the planet. We’re cruelty-free, third-party checked, and leave the cute bunnies out of it.</p>",
+                    "width": "100%",
+                    "max_width": "none",
+                    "alignment": "left",
+                    "type_preset": "custom",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1.25rem",
+                    "line_height": "tight",
+                    "letter_spacing": "tight",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "text_color": "#F1E8DA",
+                    "background": false,
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "body_text"
+              ]
+            },
+            "badges": {
+              "type": "custom-liquid",
+              "settings": {
+                "custom_liquid": "<div class=\"dropps-certifications\">\n  <div class=\"dropps-certifications__item\">\n    <img class=\"dropps-certifications__mark\" src=\"{{ 'wrapper.svg' | asset_url }}\" alt=\"B Corp Certified\" width=\"72\" height=\"72\" loading=\"lazy\">\n    <span class=\"dropps-certifications__label\">B Corp Certified</span>\n  </div>\n  <div class=\"dropps-certifications__item\">\n    <img class=\"dropps-certifications__mark\" src=\"{{ 'wrapper-2.svg' | asset_url }}\" alt=\"EPA Safer Choice\" width=\"72\" height=\"72\" loading=\"lazy\">\n    <span class=\"dropps-certifications__label\">EPA Safer Choice</span>\n  </div>\n  <div class=\"dropps-certifications__item\">\n    <img class=\"dropps-certifications__mark\" src=\"{{ 'wrapper-3.svg' | asset_url }}\" alt=\"Leaping Bunny\" width=\"72\" height=\"72\" loading=\"lazy\">\n    <span class=\"dropps-certifications__label\">Leaping Bunny</span>\n  </div>\n</div>\n<style>\n  .dropps-certifications{display:flex;flex-direction:row;align-items:flex-end;gap:48px;}\n  .dropps-certifications__item{display:flex;flex-direction:column;align-items:flex-start;gap:16px;}\n  .dropps-certifications__mark{display:block;height:72px;width:auto;}\n  .dropps-certifications__label{font-family:var(--font-body--family);font-weight:500;font-size:12px;line-height:14px;letter-spacing:0.12px;color:#F1E8DA;}\n  @media screen and (max-width: 749px){\n    .dropps-certifications{gap:24px;flex-wrap:wrap;}\n    .dropps-certifications__label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);}\n    .shopify-section:has(.dropps-certifications) h2{font-size:40px;line-height:40px;}\n    .shopify-section:has(.dropps-certifications) p{font-size:15px;line-height:20px;letter-spacing:-0.45px;}\n  }\n</style>"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "body_text_group",
+            "badges"
+          ]
+        }
+      },
+      "block_order": [
+        "heading",
+        "lower_row"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "flex-start",
+        "gap": 48,
+        "section_width": "page-width",
+        "section_height": "",
+        "background_media": "none",
+        "background_color": "#231F20",
+        "border": "none",
+        "padding-block-start": 100,
+        "padding-block-end": 80
+      }
     }
   },
   "order": [
     "hero_jVaWmY",
     "product_list_fa6P9H",
-    "community_carousel_dropps"
+    "community_carousel_dropps",
+    "certifications_band"
   ]
 }
