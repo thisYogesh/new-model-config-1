@@ -1,0 +1,365 @@
+<div class="testimonial-content" {{ block.shopify_attributes }}>
+  {%- if block.settings.image_left != blank -%}
+    <div class="testimonial-content__image testimonial-content__image--left">
+      {{
+        block.settings.image_left
+        | image_url: width: 1200
+        | image_tag:
+          loading: 'lazy',
+          sizes: '(min-width: 750px) 40vw, 0px',
+          widths: '375,550,750,1100',
+          class: 'testimonial-content__img'
+      }}
+    </div>
+  {%- endif -%}
+
+  {%- if block.settings.image_mobile != blank -%}
+    <div class="testimonial-content__image testimonial-content__image--mobile">
+      {{
+        block.settings.image_mobile
+        | image_url: width: 750
+        | image_tag:
+          loading: 'lazy',
+          sizes: '305px',
+          widths: '305,610,750',
+          class: 'testimonial-content__img'
+      }}
+    </div>
+  {%- endif -%}
+
+  <div class="testimonial-content__center">
+    <div class="testimonial-content__stars">
+      {{ 'ratings.svg' | inline_asset_content }}
+    </div>
+
+    <div class="testimonial-content__text-lockup">
+      {%- if block.settings.heading != blank -%}
+        <h3 class="testimonial-content__heading">{{ block.settings.heading }}</h3>
+      {%- endif -%}
+
+      {%- if block.settings.quote != blank -%}
+        <p class="testimonial-content__quote">{{ block.settings.quote }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="testimonial-content__attribution">
+      <div class="testimonial-content__author-row">
+        <span class="testimonial-content__verified-icon">
+          {{ 'check-circle-2.svg' | inline_asset_content }}
+        </span>
+        {%- if block.settings.author != blank -%}
+          <span class="testimonial-content__author">{{ block.settings.author }}</span>
+        {%- endif -%}
+      </div>
+
+      {%- if block.settings.product_link_label != blank -%}
+        <a
+          class="testimonial-content__product-link"
+          {%- if block.settings.product_link_url != blank %}
+            href="{{ block.settings.product_link_url }}"
+          {%- endif %}
+        >
+          {{- block.settings.product_link_label -}}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if block.settings.image_right != blank -%}
+    <div class="testimonial-content__image testimonial-content__image--right">
+      {{
+        block.settings.image_right
+        | image_url: width: 1400
+        | image_tag:
+          loading: 'lazy',
+          sizes: '(min-width: 750px) 46vw, 0px',
+          widths: '375,550,750,1100,1400',
+          class: 'testimonial-content__img'
+      }}
+    </div>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  /* ==============================================
+   * Testimonial Content Block
+   * ============================================== */
+
+  /* --- Mobile-first (default) --- */
+  .testimonial-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 48px 30px 80px;
+  }
+
+  /* Desktop images hidden on mobile */
+  .testimonial-content__image--left,
+  .testimonial-content__image--right {
+    display: none;
+  }
+
+  /* Mobile image */
+  .testimonial-content__image--mobile {
+    display: flex;
+    justify-content: center;
+    width: 305px;
+    height: 305px;
+    overflow: hidden;
+    margin-block-end: 30px;
+    flex-shrink: 0;
+  }
+
+  .testimonial-content__image--mobile .testimonial-content__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Center content column */
+  .testimonial-content__center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    max-width: 500px;
+    width: 100%;
+  }
+
+  /* Star rating */
+  .testimonial-content__stars {
+    display: flex;
+    align-items: center;
+  }
+
+  .testimonial-content__stars svg {
+    width: 74px;
+    height: 14px;
+    display: block;
+  }
+
+  /* Text lockup (heading + quote) */
+  .testimonial-content__text-lockup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .testimonial-content__heading {
+    font-family: var(--font-heading--family);
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 40px;
+    letter-spacing: -1.2px;
+    text-align: center;
+    color: #F1E8DA;
+    margin: 0;
+  }
+
+  .testimonial-content__quote {
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    text-align: center;
+    color: #F1E8DA;
+    margin: 0;
+  }
+
+  /* Attribution (author + product link) */
+  .testimonial-content__attribution {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .testimonial-content__author-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .testimonial-content__verified-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 21px;
+    height: 21px;
+    flex-shrink: 0;
+  }
+
+  .testimonial-content__verified-icon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .testimonial-content__author {
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: center;
+    color: #FCF9F5;
+  }
+
+  .testimonial-content__product-link {
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: 0.14px;
+    text-align: center;
+    text-decoration: underline;
+    color: #FCF9F5;
+  }
+
+  .testimonial-content__product-link:hover {
+    opacity: 0.8;
+  }
+
+  /* --- Hide _slide placeholder SVG when testimonial is present --- */
+  slideshow-slide:has(.testimonial-content) > .slide__image-container {
+    display: none;
+  }
+
+  /* --- Dot pagination overrides for testimonial slides --- */
+  .slideshow-section:has(.testimonial-content) slideshow-controls:has(> .slideshow-controls__dots) {
+    mix-blend-mode: normal;
+  }
+
+  .slideshow-section:has(.testimonial-content) .slideshow-controls__dots button {
+    --color: rgba(241, 232, 218, 0.3);
+    --color-active: #F1E8DA;
+    --color-hover: rgba(241, 232, 218, 0.5);
+    --size: 6px;
+  }
+
+  .slideshow-section:has(.testimonial-content) .slideshow-controls__dots button::after {
+    box-shadow: none;
+  }
+
+  .slideshow-section:has(.testimonial-content) .slideshow-controls__dots button[aria-selected='true']::after {
+    width: 18px;
+    border-radius: 3px;
+    box-shadow: none;
+  }
+
+  /* --- Desktop (≥ 750px) --- */
+  @media screen and (min-width: 750px) {
+    .testimonial-content {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: stretch;
+      min-height: 720px;
+      padding: 0;
+    }
+
+    .testimonial-content__image--left,
+    .testimonial-content__image--right {
+      display: block;
+      overflow: hidden;
+    }
+
+    .testimonial-content__image--mobile {
+      display: none;
+    }
+
+    .testimonial-content__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .testimonial-content__center {
+      justify-content: center;
+      padding-block: 48px;
+    }
+
+    .testimonial-content__text-lockup {
+      gap: 24px;
+    }
+
+    .testimonial-content__heading {
+      font-size: 56px;
+      line-height: 56px;
+      letter-spacing: -1.68px;
+    }
+
+    /* Desktop dot sizing */
+    .slideshow-section:has(.testimonial-content) .slideshow-controls__dots button {
+      --size: 8px;
+    }
+
+    .slideshow-section:has(.testimonial-content) .slideshow-controls__dots button[aria-selected='true']::after {
+      width: 24px;
+      border-radius: 4px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Testimonial",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_left",
+      "label": "Desktop image left"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_right",
+      "label": "Desktop image right"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "No Rinse, No Problem"
+    },
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Quote",
+      "default": "“I scrape plates but rarely rinse them, and I am a three course dinner kind of home cook. I get baked on mess and LOTS of dirty pots and pans. I have been very satisfied with the cleaning power of this product.”"
+    },
+    {
+      "type": "text",
+      "id": "author",
+      "label": "Author",
+      "default": "Kathy F"
+    },
+    {
+      "type": "text",
+      "id": "product_link_label",
+      "label": "Product link label",
+      "default": "Stain & Odor Laundry Pods"
+    },
+    {
+      "type": "url",
+      "id": "product_link_url",
+      "label": "Product link URL"
+    }
+  ]
+}
+{% endschema %}

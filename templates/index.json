@@ -376,7 +376,7 @@
         "heading": {
           "type": "text",
           "settings": {
-            "text": "<h2>We didn't need a badge to do the right thing. But we’re glad to have them.</h2>",
+            "text": "<h2>We didn’t need a badge to do the right thing. But we’re glad to have them.</h2>",
             "width": "100%",
             "max_width": "normal",
             "alignment": "left",
@@ -479,7 +479,7 @@
             "badges": {
               "type": "custom-liquid",
               "settings": {
-                "custom_liquid": "<div class=\"dropps-certifications\">\n  <div class=\"dropps-certifications__item\">\n    <img class=\"dropps-certifications__mark\" src=\"{{ 'wrapper.svg' | asset_url }}\" alt=\"B Corp Certified\" width=\"72\" height=\"72\" loading=\"lazy\">\n    <span class=\"dropps-certifications__label\">B Corp Certified</span>\n  </div>\n  <div class=\"dropps-certifications__item\">\n    <img class=\"dropps-certifications__mark\" src=\"{{ 'wrapper-2.svg' | asset_url }}\" alt=\"EPA Safer Choice\" width=\"72\" height=\"72\" loading=\"lazy\">\n    <span class=\"dropps-certifications__label\">EPA Safer Choice</span>\n  </div>\n  <div class=\"dropps-certifications__item\">\n    <img class=\"dropps-certifications__mark\" src=\"{{ 'wrapper-3.svg' | asset_url }}\" alt=\"Leaping Bunny\" width=\"72\" height=\"72\" loading=\"lazy\">\n    <span class=\"dropps-certifications__label\">Leaping Bunny</span>\n  </div>\n</div>\n<style>\n  .dropps-certifications{display:flex;flex-direction:row;align-items:flex-end;gap:48px;}\n  .dropps-certifications__item{display:flex;flex-direction:column;align-items:flex-start;gap:16px;}\n  .dropps-certifications__mark{display:block;height:72px;width:auto;}\n  .dropps-certifications__label{font-family:var(--font-body--family);font-weight:500;font-size:12px;line-height:14px;letter-spacing:0.12px;color:#F1E8DA;}\n  @media screen and (max-width: 749px){\n    .dropps-certifications{gap:24px;flex-wrap:wrap;}\n    .dropps-certifications__label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);}\n    .shopify-section:has(.dropps-certifications) h2{font-size:40px;line-height:40px;}\n    .shopify-section:has(.dropps-certifications) p{font-size:15px;line-height:20px;letter-spacing:-0.45px;}\n  }\n</style>"
+                "custom_liquid": "<div class=\"dropps-certifications\">\n  <div class=\"dropps-certifications__item\">\n    <img class=\"dropps-certifications__mark\" src=\"{{ ‘wrapper.svg’ | asset_url }}\" alt=\"B Corp Certified\" width=\"72\" height=\"72\" loading=\"lazy\">\n    <span class=\"dropps-certifications__label\">B Corp Certified</span>\n  </div>\n  <div class=\"dropps-certifications__item\">\n    <img class=\"dropps-certifications__mark\" src=\"{{ ‘wrapper-2.svg’ | asset_url }}\" alt=\"EPA Safer Choice\" width=\"72\" height=\"72\" loading=\"lazy\">\n    <span class=\"dropps-certifications__label\">EPA Safer Choice</span>\n  </div>\n  <div class=\"dropps-certifications__item\">\n    <img class=\"dropps-certifications__mark\" src=\"{{ ‘wrapper-3.svg’ | asset_url }}\" alt=\"Leaping Bunny\" width=\"72\" height=\"72\" loading=\"lazy\">\n    <span class=\"dropps-certifications__label\">Leaping Bunny</span>\n  </div>\n</div>\n<style>\n  .dropps-certifications{display:flex;flex-direction:row;align-items:flex-end;gap:48px;}\n  .dropps-certifications__item{display:flex;flex-direction:column;align-items:flex-start;gap:16px;}\n  .dropps-certifications__mark{display:block;height:72px;width:auto;}\n  .dropps-certifications__label{font-family:var(--font-body--family);font-weight:500;font-size:12px;line-height:14px;letter-spacing:0.12px;color:#F1E8DA;}\n  @media screen and (max-width: 749px){\n    .dropps-certifications{gap:24px;flex-wrap:wrap;}\n    .dropps-certifications__label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);}\n    .shopify-section:has(.dropps-certifications) h2{font-size:40px;line-height:40px;}\n    .shopify-section:has(.dropps-certifications) p{font-size:15px;line-height:20px;letter-spacing:-0.45px;}\n  }\n</style>"
               },
               "blocks": {}
             }
@@ -508,12 +508,88 @@
         "padding-block-start": 100,
         "padding-block-end": 80
       }
+    },
+    "testimonial": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_1": {
+          "type": "_slide",
+          "settings": {
+            "media_type_1": "image",
+            "content_direction": "column",
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "testimonial_content_1": {
+              "type": "_testimonial-content",
+              "settings": {
+                "image_left": "shopify://shop_images/312df3c0b440a4f3a5a037025b8de44a-1-desktop-47416229.jpg",
+                "image_right": "shopify://shop_images/img-mobile-52628754.jpg",
+                "image_mobile": "shopify://shop_images/img-mobile-52628754.jpg"
+              }
+            }
+          },
+          "block_order": [
+            "testimonial_content_1"
+          ]
+        },
+        "slide_2": {
+          "type": "_slide",
+          "settings": {
+            "media_type_1": "image",
+            "content_direction": "column",
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "testimonial_content_2": {
+              "type": "_testimonial-content",
+              "settings": {
+                "image_left": "shopify://shop_images/312df3c0b440a4f3a5a037025b8de44a-1-desktop-47416229.jpg",
+                "image_right": "shopify://shop_images/img-mobile-52628754.jpg",
+                "image_mobile": "shopify://shop_images/img-mobile-52628754.jpg"
+              }
+            }
+          },
+          "block_order": [
+            "testimonial_content_2"
+          ]
+        }
+      },
+      "block_order": [
+        "slide_1",
+        "slide_2"
+      ],
+      "settings": {
+        "display_mode": "full_frame",
+        "section_width": "full-width",
+        "slide_height": "auto",
+        "content_position": "on-media",
+        "background_color": "#14495B",
+        "icons_style": "none",
+        "slideshow_controls_style": "dots",
+        "autoplay": false,
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     }
   },
   "order": [
     "hero_jVaWmY",
     "product_list_fa6P9H",
     "community_carousel_dropps",
-    "certifications_band"
+    "certifications_band",
+    "testimonial"
   ]
 }
