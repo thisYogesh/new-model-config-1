@@ -583,6 +583,103 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "customer_reviews_carousel": {
+      "type": "section",
+      "blocks": {
+        "reviews_carousel": {
+          "type": "reviews-carousel",
+          "settings": {
+            "rating_summary_text": "4.8 from 10k+ Reviews",
+            "heading": "Thousands of Happy Customers",
+            "filters": "Pet Odor\nSet-In Stains\nSweat & Gym\nSensitive Skin\nBaked-On Grease\nHard Water\nBaby Messes",
+            "active_filter": "Set-In Stains",
+            "show_dots": true
+          },
+          "blocks": {
+            "card_1": {
+              "type": "_review-card",
+              "settings": {
+                "image": "shopify://shop_images/screenshot-2026-08-14-at-1-16-05-pm-1-desktop-49226766.jpg",
+                "rating": 4.5,
+                "review_title": "Eco-friendly product",
+                "review_text": "“The pods are convenient to use as I have low vision and do not want to measure a cleaning product. I like that I could choose an unscented product. Best of all, it comes in recyclable packaging.”",
+                "author": "Kathy F",
+                "product_label": "Laundry Pods",
+                "category": "Set-In Stains"
+              }
+            },
+            "card_2": {
+              "type": "_review-card",
+              "settings": {
+                "image": "shopify://shop_images/dts-mindful-mess-shauna-summers-photos-id8720-1-1-desktop-64939181.jpg",
+                "rating": 4.5,
+                "review_title": "Cleans Wonderfully!!",
+                "review_text": "“I have been using Dropps for a number of years. I like the free and clear because my husband is allergic to mass market stuff. It dissolves right away and cleans wonderfully!”",
+                "author": "Stina",
+                "product_label": "Laundry Pods",
+                "category": "Set-In Stains"
+              }
+            },
+            "card_3": {
+              "type": "_review-card",
+              "settings": {
+                "image": "shopify://shop_images/screenshot-2026-08-14-at-1-16-05-pm-1-mobile-48023461.png",
+                "rating": 4.5,
+                "review_title": "Eco-friendly product",
+                "review_text": "“The pods are convenient to use as I have low vision and do not want to measure a cleaning product. I like that I could choose an unscented product. Best of all, it comes in recyclable packaging.”",
+                "author": "Kathy F",
+                "product_label": "Laundry Pods",
+                "category": "Set-In Stains"
+              }
+            },
+            "card_4": {
+              "type": "_review-card",
+              "settings": {
+                "image": "shopify://shop_images/screenshot-2026-08-14-at-1-16-05-pm-1-desktop-49226826.png",
+                "rating": 4.5,
+                "review_title": "Eco-friendly product",
+                "review_text": "“The pods are convenient to use as I have low vision and do not want to measure a cleaning product. I like that I could choose an unscented product. Best of all, it comes in recyclable packaging.”",
+                "author": "Kathy F",
+                "product_label": "Laundry Pods",
+                "category": "Set-In Stains"
+              }
+            },
+            "card_5": {
+              "type": "_review-card",
+              "settings": {
+                "image": "shopify://shop_images/screenshot-2026-08-14-at-1-16-05-pm-1-desktop-49226826.png",
+                "rating": 4.5,
+                "review_title": "Eco-friendly product",
+                "review_text": "“The pods are convenient to use as I have low vision and do not want to measure a cleaning product. I like that I could choose an unscented product. Best of all, it comes in recyclable packaging.”",
+                "author": "Kathy F",
+                "product_label": "Stain & Odor Laundry Pods",
+                "category": "Set-In Stains"
+              }
+            }
+          },
+          "block_order": [
+            "card_1",
+            "card_2",
+            "card_3",
+            "card_4",
+            "card_5"
+          ]
+        }
+      },
+      "block_order": [
+        "reviews_carousel"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "flex-start",
+        "gap": 0,
+        "section_width": "page-width",
+        "background_color": "#E9EA6B",
+        "padding-block-start": 64,
+        "padding-block-end": 64
+      }
     }
   },
   "order": [
@@ -590,6 +687,7 @@
     "product_list_fa6P9H",
     "community_carousel_dropps",
     "certifications_band",
-    "testimonial"
+    "testimonial",
+    "customer_reviews_carousel"
   ]
 }

@@ -1,0 +1,526 @@
+{% liquid
+  assign heading = block.settings.heading
+  assign summary = block.settings.rating_summary_text
+  assign active_filter = block.settings.active_filter
+  assign filters_raw = block.settings.filters
+%}
+
+<reviews-carousel
+  class="reviews-carousel"
+  data-active-filter="{{ active_filter }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="reviews-carousel__header">
+    <div class="reviews-carousel__rating-summary">
+      <div class="reviews-carousel__summary-stars" aria-hidden="true">
+        <span class="reviews-carousel__summary-star">{{ 'icon-toggle-star-24px-2.svg' | inline_asset_content }}</span>
+        <span class="reviews-carousel__summary-star">{{ 'icon-toggle-star-24px-2.svg' | inline_asset_content }}</span>
+        <span class="reviews-carousel__summary-star">{{ 'icon-toggle-star-24px-2.svg' | inline_asset_content }}</span>
+        <span class="reviews-carousel__summary-star">{{ 'icon-toggle-star-24px-2.svg' | inline_asset_content }}</span>
+        <span class="reviews-carousel__summary-star">{{ 'icon-toggle-star-half-24px.svg' | inline_asset_content }}</span>
+      </div>
+      {%- if summary != blank -%}
+        <span class="reviews-carousel__summary-text">{{ summary }}</span>
+      {%- endif -%}
+    </div>
+
+    {%- if heading != blank -%}
+      <h2 class="reviews-carousel__heading">{{ heading }}</h2>
+    {%- endif -%}
+
+    {%- if filters_raw != blank -%}
+      <div class="reviews-carousel__filter-bar" ref="filterBar" role="tablist" aria-label="Filter reviews by category">
+        {%- assign filter_items = filters_raw | split: '
+' -%}
+        {%- for filter_item in filter_items -%}
+          {%- assign filter_label = filter_item | strip -%}
+          {%- if filter_label != blank -%}
+            <button
+              type="button"
+              class="reviews-carousel__pill{% if filter_label == active_filter %} reviews-carousel__pill--active{% endif %}"
+              role="tab"
+              aria-selected="{% if filter_label == active_filter %}true{% else %}false{% endif %}"
+              data-filter="{{ filter_label }}"
+            >
+              {{- filter_label -}}
+            </button>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="reviews-carousel__track-wrapper">
+    <div
+      class="reviews-carousel__track"
+      ref="track"
+      role="group"
+      aria-label="Customer reviews"
+    >
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+
+  {%- if block.settings.show_dots -%}
+    <div
+      class="reviews-carousel__dots-container"
+    >
+      <div
+        class="reviews-carousel__dots"
+        ref="dots"
+        role="tablist"
+        aria-label="Review carousel pagination"
+      ></div>
+    </div>
+  {%- endif -%}
+</reviews-carousel>
+
+{% stylesheet %}
+  .reviews-carousel {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+  }
+
+  .reviews-carousel__header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .reviews-carousel__rating-summary {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    padding-block-start: 1px;
+  }
+
+  .reviews-carousel__summary-stars {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1px;
+    margin-inline-end: 4px;
+  }
+
+  .reviews-carousel__summary-star {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+  }
+
+  .reviews-carousel__summary-star svg {
+    width: 14px;
+    height: 14px;
+    display: block;
+  }
+
+  .reviews-carousel__summary-text {
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: 0.14px;
+    color: #231F20;
+  }
+
+  .reviews-carousel__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: 800;
+    font-size: 40px;
+    line-height: 40px;
+    text-transform: uppercase;
+    color: #231F20;
+  }
+
+  .reviews-carousel__filter-bar {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .reviews-carousel__filter-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .reviews-carousel__pill {
+    flex: 0 0 auto;
+    padding: 8px 12px;
+    border: 1px solid #231F20;
+    border-radius: 2px;
+    background: transparent;
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: 0.14px;
+    color: #231F20;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .reviews-carousel__pill--active {
+    background-color: #14495B;
+    color: #FCF9F5;
+    border-color: #14495B;
+  }
+
+  .reviews-carousel__track-wrapper {
+    overflow: hidden;
+  }
+
+  .reviews-carousel__track {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .reviews-carousel__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .reviews-carousel__track > * {
+    flex: 0 0 200px;
+  }
+
+  .reviews-carousel__dots-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .reviews-carousel__dots {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 16px;
+  }
+
+  .reviews-carousel__dot {
+    width: 6px;
+    height: 6px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background-color: #231F20;
+    opacity: 0.35;
+    cursor: pointer;
+    transition: width 0.2s ease, opacity 0.2s ease, border-radius 0.2s ease;
+  }
+
+  .reviews-carousel__dot.is-active {
+    width: 18px;
+    border-radius: 3px;
+    opacity: 1;
+  }
+
+  @media screen and (min-width: 750px) {
+    .reviews-carousel {
+      gap: 48px;
+    }
+
+    .reviews-carousel__header {
+      gap: 10px;
+    }
+
+    .reviews-carousel__rating-summary {
+      gap: 4px;
+    }
+
+    .reviews-carousel__summary-text {
+      font-size: 16px;
+      line-height: 20px;
+      letter-spacing: 0;
+    }
+
+    .reviews-carousel__heading {
+      font-size: 56px;
+      line-height: 56px;
+      margin-block-end: 22px;
+    }
+
+    .reviews-carousel__track {
+      gap: 32px;
+    }
+
+    .reviews-carousel__track > * {
+      flex: 0 0 calc((100% - 96px) / 4);
+    }
+
+    .reviews-carousel__dots {
+      gap: 8px;
+      padding: 16px 24px;
+    }
+
+    .reviews-carousel__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .reviews-carousel__dot.is-active {
+      width: 24px;
+      border-radius: 4px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reviews-carousel__pill,
+    .reviews-carousel__dot {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('reviews-carousel')) {
+    class ReviewsCarousel extends HTMLElement {
+      connectedCallback() {
+        this.track = this.querySelector('.reviews-carousel__track');
+        this.dotsContainer = this.querySelector('.reviews-carousel__dots');
+        this.filterBar = this.querySelector('.reviews-carousel__filter-bar');
+
+        if (!this.track) return;
+
+        this.activeIndex = 0;
+        this.pageCount = 0;
+        this.scrollFrame = null;
+
+        this.handleScroll = this.handleScroll.bind(this);
+        this.handleResize = this.handleResize.bind(this);
+
+        this.track.addEventListener('scroll', this.handleScroll, { passive: true });
+
+        if (typeof ResizeObserver !== 'undefined') {
+          this.resizeObserver = new ResizeObserver(this.handleResize);
+          this.resizeObserver.observe(this.track);
+        } else {
+          window.addEventListener('resize', this.handleResize);
+        }
+
+        if (this.filterBar) {
+          this.filterBar.addEventListener('click', (e) => {
+            const pill = e.target.closest('.reviews-carousel__pill');
+            if (!pill) return;
+            this.handleFilterClick(pill);
+          });
+        }
+
+        this.buildDots();
+      }
+
+      disconnectedCallback() {
+        if (this.track) {
+          this.track.removeEventListener('scroll', this.handleScroll);
+        }
+
+        if (this.resizeObserver) {
+          this.resizeObserver.disconnect();
+        } else {
+          window.removeEventListener('resize', this.handleResize);
+        }
+
+        if (this.scrollFrame) {
+          cancelAnimationFrame(this.scrollFrame);
+        }
+      }
+
+      get cards() {
+        return Array.from(this.track.querySelectorAll('.review-card'));
+      }
+
+      get visibleCards() {
+        return this.cards.filter((card) => card.style.display !== 'none');
+      }
+
+      get pageWidth() {
+        const width = this.track.clientWidth;
+        return width > 0 ? width : 1;
+      }
+
+      handleFilterClick(pill) {
+        const filterValue = pill.dataset.filter;
+        const pills = this.filterBar.querySelectorAll('.reviews-carousel__pill');
+
+        for (const p of pills) {
+          p.classList.remove('reviews-carousel__pill--active');
+          p.setAttribute('aria-selected', 'false');
+        }
+
+        pill.classList.add('reviews-carousel__pill--active');
+        pill.setAttribute('aria-selected', 'true');
+
+        const allCards = this.cards;
+        let matchCount = 0;
+
+        for (const card of allCards) {
+          const category = card.dataset.category || '';
+          if (category === '' || category === filterValue) {
+            card.style.display = '';
+            matchCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        }
+
+        if (matchCount === 0) {
+          for (const card of allCards) {
+            card.style.display = '';
+          }
+        }
+
+        this.track.scrollTo({ left: 0, behavior: 'instant' });
+        this.activeIndex = 0;
+        this.pageCount = 0;
+        this.buildDots();
+      }
+
+      buildDots() {
+        if (!this.dotsContainer) return;
+
+        const scrollWidth = this.track.scrollWidth;
+        const clientWidth = this.pageWidth;
+        const pageCount = Math.max(1, Math.ceil(scrollWidth / clientWidth));
+
+        if (pageCount === this.pageCount) {
+          this.syncActive();
+          return;
+        }
+
+        this.pageCount = pageCount;
+        this.dotsContainer.textContent = '';
+
+        if (pageCount < 2) {
+          this.dotsContainer.style.display = 'none';
+          return;
+        }
+
+        this.dotsContainer.style.display = '';
+
+        for (let i = 0; i < pageCount; i++) {
+          const dot = document.createElement('button');
+          dot.type = 'button';
+          dot.className = 'reviews-carousel__dot';
+          if (i === 0) dot.classList.add('is-active');
+          dot.setAttribute('role', 'tab');
+          dot.setAttribute('aria-label', 'Go to page ' + (i + 1));
+          dot.addEventListener('click', () => this.goTo(i));
+          this.dotsContainer.appendChild(dot);
+        }
+
+        this.syncActive();
+      }
+
+      goTo(index) {
+        this.track.scrollTo({ left: index * this.pageWidth, behavior: 'smooth' });
+      }
+
+      handleScroll() {
+        if (this.scrollFrame) return;
+
+        this.scrollFrame = requestAnimationFrame(() => {
+          this.scrollFrame = null;
+          this.syncActive();
+        });
+      }
+
+      handleResize() {
+        this.pageCount = 0;
+        this.buildDots();
+      }
+
+      syncActive() {
+        if (!this.dotsContainer || this.pageCount < 2) return;
+
+        const maxIndex = this.pageCount - 1;
+        let index = Math.round(this.track.scrollLeft / this.pageWidth);
+
+        if (index < 0) index = 0;
+        if (index > maxIndex) index = maxIndex;
+
+        if (index === this.activeIndex) {
+          const current = this.dotsContainer.children[index];
+          if (current && current.classList.contains('is-active')) return;
+        }
+
+        this.activeIndex = index;
+
+        for (let i = 0; i < this.dotsContainer.children.length; i++) {
+          const dot = this.dotsContainer.children[i];
+          if (i === index) {
+            dot.classList.add('is-active');
+          } else {
+            dot.classList.remove('is-active');
+          }
+        }
+      }
+    }
+
+    customElements.define('reviews-carousel', ReviewsCarousel);
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Reviews carousel",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_review-card"
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "rating_summary_text",
+      "label": "Rating summary",
+      "default": "4.8 from 10k+ Reviews"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Thousands of Happy Customers"
+    },
+    {
+      "type": "textarea",
+      "id": "filters",
+      "label": "Filter labels",
+      "info": "One label per line",
+      "default": "Pet Odor\nSet-In Stains\nSweat & Gym\nSensitive Skin\nBaked-On Grease\nHard Water\nBaby Messes"
+    },
+    {
+      "type": "text",
+      "id": "active_filter",
+      "label": "Default active filter",
+      "default": "Set-In Stains"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show pagination dots",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reviews carousel"
+    }
+  ]
+}
+{% endschema %}
