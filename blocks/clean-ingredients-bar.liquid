@@ -1,0 +1,380 @@
+{%- doc -%}
+  Clean ingredients bar block: heading, four label/description rows, a CTA link and up to three certification badges.
+{%- enddoc -%}
+
+{%- liquid
+  assign block_settings = block.settings
+  assign row_indexes = '1,2,3,4' | split: ','
+  assign badge_indexes = '1,2,3' | split: ','
+-%}
+
+<div
+  class="clean-ingredients-bar"
+  {{ block.shopify_attributes }}
+>
+  <div class="clean-ingredients-bar__inner">
+    <div class="clean-ingredients-bar__content">
+      {%- if block_settings.heading != blank -%}
+        <h2 class="clean-ingredients-bar__heading">{{ block_settings.heading }}</h2>
+      {%- endif -%}
+
+      <dl class="clean-ingredients-bar__rows">
+        {%- for index in row_indexes -%}
+          {%- liquid
+            assign label_key = 'row_' | append: index | append: '_label'
+            assign description_key = 'row_' | append: index | append: '_description'
+            assign row_label = block_settings[label_key]
+            assign row_description = block_settings[description_key]
+          -%}
+          {%- if row_label != blank or row_description != blank -%}
+            <div class="clean-ingredients-bar__row">
+              <dt class="clean-ingredients-bar__label">{{ row_label }}</dt>
+              <dd class="clean-ingredients-bar__description">{{ row_description }}</dd>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </dl>
+
+      {%- if block_settings.cta_label != blank -%}
+        <a
+          class="clean-ingredients-bar__cta"
+          {% if block_settings.cta_url != blank %}
+            href="{{ block_settings.cta_url }}"
+          {% else %}
+            role="link"
+            aria-disabled="true"
+          {% endif %}
+        >
+          {{- block_settings.cta_label -}}
+        </a>
+      {%- endif -%}
+    </div>
+
+    <ul class="clean-ingredients-bar__badges">
+      {%- for index in badge_indexes -%}
+        {%- liquid
+          assign image_key = 'badge_' | append: index | append: '_image'
+          assign caption_key = 'badge_' | append: index | append: '_caption'
+          assign badge_image = block_settings[image_key]
+          assign badge_caption = block_settings[caption_key]
+        -%}
+        {%- if badge_image != blank or badge_caption != blank -%}
+          <li class="clean-ingredients-bar__badge">
+            {%- if badge_image != blank -%}
+              <div class="clean-ingredients-bar__badge-media">
+                {{
+                  badge_image
+                  | image_url: width: 160
+                  | image_tag:
+                    widths: '80,120,160',
+                    sizes: '80px',
+                    loading: 'lazy',
+                    alt: badge_caption,
+                    class: 'clean-ingredients-bar__badge-image'
+                }}
+              </div>
+            {%- endif -%}
+            {%- if badge_caption != blank -%}
+              <span class="clean-ingredients-bar__badge-caption">{{ badge_caption }}</span>
+            {%- endif -%}
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+{% stylesheet %}
+  .clean-ingredients-bar {
+    width: 100%;
+    color: var(--color-foreground);
+  }
+
+  .clean-ingredients-bar__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+    max-width: var(--normal-page-width, 1200px);
+    margin-inline: auto;
+    padding: 48px 20px;
+  }
+
+  .clean-ingredients-bar__content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+  }
+
+  .clean-ingredients-bar__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: 28px;
+    line-height: 28px;
+    letter-spacing: -0.84px;
+  }
+
+  .clean-ingredients-bar__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .clean-ingredients-bar__row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-block-end: 12px;
+    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.2);
+  }
+
+  .clean-ingredients-bar__label {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 18px;
+    letter-spacing: 0.14px;
+    text-transform: uppercase;
+  }
+
+  .clean-ingredients-bar__description {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    overflow-wrap: break-word;
+  }
+
+  .clean-ingredients-bar__cta {
+    align-self: flex-start;
+    font-family: var(--font-body--family);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 16px;
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .clean-ingredients-bar__badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .clean-ingredients-bar__badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 96px;
+    text-align: center;
+  }
+
+  .clean-ingredients-bar__badge-media {
+    width: 80px;
+    height: 80px;
+  }
+
+  .clean-ingredients-bar__badge-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .clean-ingredients-bar__badge-caption {
+    font-family: var(--font-body--family);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .clean-ingredients-bar__inner {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 64px;
+      padding: 64px 40px;
+    }
+
+    .clean-ingredients-bar__content {
+      flex: 1 1 auto;
+      max-width: 616px;
+    }
+
+    .clean-ingredients-bar__heading {
+      font-size: 40px;
+      line-height: 40px;
+      letter-spacing: -1.2px;
+    }
+
+    .clean-ingredients-bar__row {
+      flex-direction: row;
+      gap: 24px;
+    }
+
+    .clean-ingredients-bar__label {
+      flex: 0 0 160px;
+    }
+
+    .clean-ingredients-bar__badges {
+      flex: 0 0 auto;
+      flex-wrap: nowrap;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Clean ingredients bar",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Formula"
+    },
+    {
+      "type": "header",
+      "content": "Row 1"
+    },
+    {
+      "type": "text",
+      "id": "row_1_label",
+      "label": "Label",
+      "default": "Biobased"
+    },
+    {
+      "type": "text",
+      "id": "row_1_description",
+      "label": "Description",
+      "default": "Plant and mineral derived ingredients"
+    },
+    {
+      "type": "header",
+      "content": "Row 2"
+    },
+    {
+      "type": "text",
+      "id": "row_2_label",
+      "label": "Label",
+      "default": "Pod Film"
+    },
+    {
+      "type": "text",
+      "id": "row_2_description",
+      "label": "Description",
+      "default": "Dissolves completely in water"
+    },
+    {
+      "type": "header",
+      "content": "Row 3"
+    },
+    {
+      "type": "text",
+      "id": "row_3_label",
+      "label": "Label",
+      "default": "Made With"
+    },
+    {
+      "type": "text",
+      "id": "row_3_description",
+      "label": "Description",
+      "default": "Enzymes, plant-based surfactants, mineral salts"
+    },
+    {
+      "type": "header",
+      "content": "Row 4"
+    },
+    {
+      "type": "text",
+      "id": "row_4_label",
+      "label": "Label",
+      "default": "Never Made With"
+    },
+    {
+      "type": "text",
+      "id": "row_4_description",
+      "label": "Description",
+      "default": "Dyes, phosphates, chlorine, parabens"
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Link label",
+      "default": "View all ingredients"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Badge 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "badge_1_caption",
+      "label": "Caption",
+      "default": "B Corp Certified"
+    },
+    {
+      "type": "header",
+      "content": "Badge 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "badge_2_caption",
+      "label": "Caption",
+      "default": "Leaping Bunny"
+    },
+    {
+      "type": "header",
+      "content": "Badge 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "badge_3_caption",
+      "label": "Caption",
+      "default": "EPA Safer Choice"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Clean ingredients bar",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

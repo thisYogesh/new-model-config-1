@@ -7,6 +7,46 @@
 
 {% unless product_resource == blank %}
   {% render 'variant-main-picker', product_resource: product_resource, section: section, product: product %}
+
+  {%- comment -%}
+    Per-option-value CSS variables consumed by the buybox overrides in snippets/variant-picker-styles.liquid:
+    --selected-value  → selected value shown next to the option name (keyed on :checked so it stays in sync)
+    --swatch-label    → value name rendered inside swatch pills
+    --savings-badge   → "N% OFF" badge for option values whose variant has a compare-at price
+  {%- endcomment -%}
+  {%- unless product_resource.has_only_default_variant -%}
+    {%- assign picker_scope = 'variant-picker[data-block-id="' | append: block.id | append: '"]' -%}
+    {% style %}
+      {%- for product_option in product_resource.options_with_values -%}
+        {%- for product_option_value in product_option.values -%}
+          {%- liquid
+            assign value_id = product_option_value.id
+            assign value_label = product_option_value | replace: '"', "'"
+            assign value_variant = product_option_value.variant
+            assign has_savings = false
+            if block.settings.show_savings_badges and value_variant != blank and value_variant.compare_at_price > value_variant.price
+              assign savings_amount = value_variant.compare_at_price | minus: value_variant.price
+              assign savings_percent = savings_amount | times: 100.0 | divided_by: value_variant.compare_at_price | round
+              assign has_savings = true
+            endif
+          -%}
+          {{ picker_scope }} .variant-option--buttons:has(> .variant-option__button-label > input[data-option-value-id="{{ value_id }}"]:checked) {
+            --selected-value: "{{ value_label }}";
+          }
+          {%- if product_option_value.swatch -%}
+            {{ picker_scope }} .variant-option__button-label:has(> input[data-option-value-id="{{ value_id }}"]) {
+              --swatch-label: "{{ value_label }}";
+            }
+          {%- endif -%}
+          {%- if has_savings -%}
+            {{ picker_scope }} .variant-option__button-label:has(> input[data-option-value-id="{{ value_id }}"]) {
+              --savings-badge: "{{ savings_percent }}% OFF";
+            }
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endfor -%}
+    {% endstyle %}
+  {%- endunless -%}
 {% endunless %}
 
 {% schema %}
@@ -39,6 +79,13 @@
       "id": "show_swatches",
       "label": "t:settings.swatches",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_savings_badges",
+      "label": "Show savings badges",
+      "info": "Shows a \"% OFF\" badge on option values whose variant has a compare-at price.",
+      "default": false
     },
     {
       "type": "header",

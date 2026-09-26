@@ -1,3 +1,13 @@
+{%- liquid
+  assign gallery_variant = closest.product.selected_or_first_available_variant
+  assign show_sale_badge = false
+  if block.settings.show_sale_badge and gallery_variant != blank and gallery_variant.compare_at_price > gallery_variant.price
+    assign sale_savings_amount = gallery_variant.compare_at_price | minus: gallery_variant.price
+    assign sale_savings_percent = sale_savings_amount | times: 100.0 | divided_by: gallery_variant.compare_at_price | round
+    assign show_sale_badge = true
+  endif
+-%}
+
 {% render 'product-media-gallery-content',
   media_presentation: block.settings.media_presentation,
   block_settings: block.settings,
@@ -6,6 +16,147 @@
   block: block,
   section: section
 %}
+
+{%- if block.settings.media_background_color != blank or show_sale_badge -%}
+  {% style %}
+    {%- if block.settings.media_background_color != blank -%}
+      .product-information__media media-gallery {
+        --media-background: {{ block.settings.media_background_color }};
+      }
+    {%- endif -%}
+    {%- if show_sale_badge -%}
+      .product-information__media media-gallery::before {
+        content: "Save {{ sale_savings_percent }}%";
+        --sale-badge-color: {{ block.settings.sale_badge_color | default: '#E9EA6B' }};
+      }
+    {%- endif -%}
+  {% endstyle %}
+{%- endif -%}
+
+{% stylesheet %}
+  /* Product page buybox overrides for the media gallery */
+  .product-information__media {
+    position: relative;
+  }
+
+  .product-information__media media-gallery {
+    --slideshow-thumbnails-padding-block: 20px 0px;
+    --slideshow-thumbnails-padding-inline: 0px;
+  }
+
+  /* "Save X%" badge (content set inline when the selected variant is on sale) */
+  .product-information__media media-gallery::before {
+    position: absolute;
+    top: calc(var(--padding-block-start, 0px) + 16px);
+    inset-inline-start: calc(var(--padding-inline-start, 0px) + 16px);
+    z-index: var(--layer-raised);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    background-color: var(--sale-badge-color, #E9EA6B);
+    color: #231F20;
+    font-family: var(--font-body--family);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    pointer-events: none;
+  }
+
+  /* Media background */
+  .product-information__media .product-media-container {
+    background-color: var(--media-background, transparent);
+  }
+
+  .product-information__media .product-media-container.media-fit-contain :is(img, .deferred-media__poster-image) {
+    background-color: var(--media-background, var(--color-background));
+  }
+
+  /* Thumbnail rail */
+  .product-information__media .slideshow-controls__thumbnails {
+    gap: 12px;
+    padding-inline: 0;
+    margin-inline: 0;
+  }
+
+  .product-information__media .slideshow-controls__thumbnails .slideshow-control {
+    border-radius: 2px;
+    border: 1.5px solid transparent;
+    background-color: var(--media-background, transparent);
+  }
+
+  .product-information__media .slideshow-controls__thumbnails .slideshow-control img {
+    border-radius: 1px;
+  }
+
+  .product-information__media .slideshow-controls__thumbnails .slideshow-control[aria-selected='true'] {
+    outline: none;
+    border: 1.5px solid #231F20;
+  }
+
+  /* Pagination dots */
+  .product-information__media slideshow-controls[controls-on-media] {
+    --color-foreground: #231F20;
+    --color-foreground-rgb: 35 31 32;
+
+    mix-blend-mode: normal;
+  }
+
+  .product-information__media .slideshow-controls__dots {
+    gap: 8px;
+    padding: 16px 24px;
+  }
+
+  .product-information__media .slideshow-controls__dots button {
+    width: auto;
+    height: 16px;
+    margin: 0;
+    padding: 0;
+    border-radius: 4px;
+  }
+
+  .product-information__media .slideshow-controls__dots button::after {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background-color: rgb(35 31 32 / 0.2);
+    box-shadow: none;
+  }
+
+  .product-information__media .slideshow-controls__dots button[aria-selected='true']::after {
+    width: 24px;
+    background-color: #231F20;
+    box-shadow: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .product-information__media .slideshow-controls__dots button::after {
+      transition: width var(--animation-speed) var(--animation-easing);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-information__media .slideshow-controls__dots {
+      gap: 6px;
+      padding: 12px 16px;
+    }
+
+    .product-information__media .slideshow-controls__dots button {
+      height: 12px;
+      border-radius: 3px;
+    }
+
+    .product-information__media .slideshow-controls__dots button::after {
+      width: 6px;
+      height: 6px;
+      border-radius: 3px;
+    }
+
+    .product-information__media .slideshow-controls__dots button[aria-selected='true']::after {
+      width: 18px;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
@@ -274,6 +425,34 @@
       "id": "hide_variants",
       "default": false,
       "label": "t:settings.hide_unselected_variant_media"
+    },
+    {
+      "type": "header",
+      "content": "Sale badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sale_badge",
+      "label": "Show sale badge",
+      "info": "Shows a \"Save X%\" badge when the selected variant has a compare-at price.",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_color",
+      "label": "Sale badge color",
+      "default": "#E9EA6B",
+      "visible_if": "{{ block.settings.show_sale_badge }}"
+    },
+    {
+      "type": "header",
+      "content": "Media background"
+    },
+    {
+      "type": "color",
+      "id": "media_background_color",
+      "label": "Media background color",
+      "placeholder": "Default"
     },
     {
       "type": "header",

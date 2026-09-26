@@ -70,6 +70,39 @@
       align-self: var(--details-position, 'flex-start');
     }
   }
+
+  /* Product page buybox typography overrides */
+  .product-details .group-block .text-block h1 {
+    font-family: var(--font-heading--family);
+    font-size: 28px;
+    line-height: 28px;
+    letter-spacing: -0.84px;
+  }
+
+  .product-details .text-block .price {
+    font-family: var(--font-heading--family);
+    font-size: 40px;
+    line-height: 40px;
+    letter-spacing: -1.2px;
+  }
+
+  .product-details .text-block .compare-at-price,
+  .product-details .text-block .unit-price {
+    font-family: var(--font-body--family);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 18px;
+    letter-spacing: 0.14px;
+    opacity: 0.6;
+  }
+
+  @media screen and (min-width: 750px) {
+    .product-details .group-block .text-block h1 {
+      font-size: 40px;
+      line-height: 40px;
+      letter-spacing: -1.2px;
+    }
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -135,6 +168,15 @@
     },
     {
       "type": "product-custom-property"
+    },
+    {
+      "type": "purchase-options"
+    },
+    {
+      "type": "shipping-banner"
+    },
+    {
+      "type": "popular-add-on"
     }
   ],
   "tag": null,

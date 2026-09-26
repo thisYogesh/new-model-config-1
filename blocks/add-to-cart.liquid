@@ -10,6 +10,18 @@
   assign scoped_class = block.settings.style_class | append: '--' | append: block.id
   assign class = 'add-to-cart-button ' | append: block.settings.style_class | append: ' ' | append: scoped_class
   assign id = 'BuyButtons-ProductSubmitButton-' | append: block.id
+  assign button_text = add_to_cart_text
+
+  if block.settings.show_price and can_add_to_cart
+    assign selected_variant = closest.product.selected_or_first_available_variant
+    if settings.currency_code_enabled_product_pages
+      assign variant_price = selected_variant.price | money_with_currency
+    else
+      assign variant_price = selected_variant.price | money
+    endif
+    assign button_text = 'Add to Cart&nbsp;&nbsp;|&nbsp;&nbsp;' | append: variant_price
+    assign class = class | append: ' add-to-cart-button--with-price'
+  endif
 %}
 {% render 'button-custom-styles', block_settings: block.settings, block_id: block.id %}
 {% render 'add-to-cart-button-styles' %}
@@ -25,10 +37,27 @@
     can_add_to_cart: can_add_to_cart,
     show_icon: can_add_to_cart,
     product: closest.product,
-    add_to_cart_text: add_to_cart_text,
+    add_to_cart_text: button_text,
     data_testid: 'standalone-add-to-cart'
   %}
 </span>
+
+{% stylesheet %}
+  .add-to-cart-button.add-to-cart-button--with-price {
+    min-height: 40px;
+    padding: 12px 24px;
+    font-family: var(--font-body--family);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 16px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .add-to-cart-button.add-to-cart-button--with-price {
+      min-height: 48px;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
@@ -55,6 +84,12 @@
       ],
       "default": "button-secondary",
       "info": "t:info.edit_button_style_in_theme_settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show price on button",
+      "default": false
     },
     {
       "type": "header",

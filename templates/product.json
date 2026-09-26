@@ -38,7 +38,8 @@
             "padding-inline-start": 0,
             "padding-inline-end": 0,
             "show_sale_badge": true,
-            "sale_badge_color": "#E9EA6B"
+            "sale_badge_color": "#E9EA6B",
+            "media_background_color": "#F1E8DA"
           },
           "blocks": {}
         },

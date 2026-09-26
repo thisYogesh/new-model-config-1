@@ -523,4 +523,197 @@
   .variant-option__button-label--has-swatch:has([data-option-available='false']):has(:checked):hover {
     background-color: inherit;
   }
+
+  /* ------------------------------------------------------------------
+     Product page buybox overrides (scoped to .product-details)
+     Swatch pills, size pills, option label row and savings badges.
+     ------------------------------------------------------------------ */
+  .product-details .variant-option {
+    --color-variant-border: #E0E6ED;
+    --color-variant-background: #FFFFFF;
+    --color-variant-text: #231F20;
+    --color-variant-text-rgb: 35 31 32;
+    --color-variant-hover-border: #231F20;
+    --color-variant-hover-background: #FFFFFF;
+    --color-variant-hover-text: #231F20;
+    --color-selected-variant-border: #14495B;
+    --color-selected-variant-background: #14495B;
+    --color-selected-variant-text: #FFFFFF;
+    --color-selected-variant-text-rgb: 255 255 255;
+    --color-selected-variant-hover-border: #14495B;
+    --color-selected-variant-hover-background: #14495B;
+    --color-selected-variant-hover-text: #FFFFFF;
+    --options-border-radius: 0;
+    --options-border-width: 1px;
+    --variant-picker-swatch-width: 24px;
+    --variant-picker-swatch-height: 24px;
+    --variant-picker-swatch-width-unitless: 24;
+    --variant-picker-swatch-height-unitless: 24;
+    --variant-picker-swatch-radius: 0;
+  }
+
+  .product-details .variant-option + .variant-option {
+    margin-top: 16px;
+  }
+
+  .product-details .variant-option--buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* Option label row: "SCENT  Crisp Breeze" */
+  .product-details .variant-option--buttons > legend {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+    padding: 0;
+    margin-block-end: 16px;
+    font-family: var(--font-body--family);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 18px;
+    letter-spacing: 0.14px;
+    text-transform: uppercase;
+    color: #231F20;
+  }
+
+  .product-details .variant-option--buttons > legend .variant-option__swatch-value,
+  .product-details .variant-option--buttons > legend::after {
+    padding-inline-start: 0;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 0;
+    text-transform: none;
+    color: #231F20;
+  }
+
+  /* Non-swatch fieldsets get the selected value from a CSS variable set by the variant-picker block */
+  .product-details .variant-option--buttons:not(.variant-option--swatches) > legend::after {
+    content: var(--selected-value);
+  }
+
+  /* Swatch pills: 24px square swatch + label text */
+  .product-details .variant-option .variant-option__button-label--has-swatch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: auto;
+    padding: 12px;
+    background-color: #FFFFFF;
+    border: 1px solid #D1D1D4;
+    border-radius: 0;
+    outline: none;
+    color: #231F20;
+  }
+
+  .product-details .variant-option .variant-option__button-label--has-swatch::before {
+    content: var(--swatch-label);
+    order: 2;
+    font-family: var(--font-body--family);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    white-space: nowrap;
+  }
+
+  .product-details .variant-option .variant-option__button-label--has-swatch .swatch {
+    border-radius: 0;
+  }
+
+  .product-details .variant-option .variant-option__button-label--has-swatch:hover {
+    outline: none;
+    border-color: #231F20;
+  }
+
+  .product-details .variant-option .variant-option__button-label--has-swatch:has(:checked) {
+    outline: none;
+    border: 2px solid #2E5525;
+  }
+
+  /* Size pills */
+  .product-details .variant-option .variant-option__button-label:not(.variant-option__button-label--has-swatch) {
+    flex: 0 0 auto;
+    min-width: 106px;
+    min-height: 56px;
+    padding: 16px;
+    background-color: #FFFFFF;
+    border: 1px solid #E0E6ED;
+    border-radius: 0;
+    color: #231F20;
+    font-family: var(--font-body--family);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+  }
+
+  .product-details
+    .variant-option
+    .variant-option__button-label:not(.variant-option__button-label--has-swatch):has([data-option-available='false']) {
+    border-width: 0;
+  }
+
+  .product-details .variant-option .variant-option__button-label:not(.variant-option__button-label--has-swatch):has(:checked) {
+    background: #14495B;
+    color: #FFF;
+    border: 2px solid #14495B;
+  }
+
+  .product-details
+    .variant-option
+    .variant-option__button-label:not(.variant-option__button-label--has-swatch):has(:checked)::before {
+    inset: -2px;
+    border-width: 2px;
+    border-color: #14495B;
+  }
+
+  .product-details .variant-option .variant-option__button-label:not(.variant-option__button-label--has-swatch):has(:focus-visible) {
+    outline: var(--focus-outline-width) solid #231F20;
+  }
+
+  /* "N% OFF" savings badge, set per option value by the variant-picker block */
+  .product-details .variant-option .variant-option__button-label:not(:has([data-option-available='false']))::after {
+    content: var(--savings-badge);
+    position: absolute;
+    top: 0;
+    inset-inline-end: 0;
+    inset-block-start: 0;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    width: auto;
+    height: auto;
+    padding: 2px 8px;
+    background-color: #FFFFFF;
+    border: 1.5px solid #231F20;
+    border-radius: 0;
+    color: #231F20;
+    font-family: var(--font-body--family);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 14px;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    white-space: nowrap;
+    pointer-events: none;
+    clip-path: none;
+    transform: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-details .variant-option .variant-option__button-label:not(.variant-option__button-label--has-swatch) {
+      min-width: 78px;
+      min-height: 40px;
+      padding: 8px 10px;
+      font-size: 12px;
+      line-height: 16px;
+    }
+
+    .product-details .variant-option .variant-option__button-label:not(:has([data-option-available='false']))::after {
+      padding: 1px 6px;
+      font-size: 8px;
+      line-height: 10px;
+    }
+  }
 {% endstylesheet %}

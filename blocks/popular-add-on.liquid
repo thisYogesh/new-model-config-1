@@ -1,0 +1,391 @@
+{%- doc -%}
+  Popular add-on block: promotes a companion product with its own AJAX add-to-cart form.
+  Renders nothing until a product is selected.
+{%- enddoc -%}
+
+{%- liquid
+  assign block_settings = block.settings
+  assign addon_product = block_settings.product
+-%}
+
+{%- if addon_product != blank -%}
+  {%- liquid
+    assign addon_variant = addon_product.selected_or_first_available_variant
+    assign addon_image = addon_variant.featured_image | default: addon_product.featured_image
+    assign form_id = 'PopularAddOn-ProductForm-' | append: block.id
+    assign button_id = 'PopularAddOn-SubmitButton-' | append: block.id
+    assign chip_color = block_settings.chip_color | default: '#99D9D9'
+
+    if settings.currency_code_enabled_product_pages
+      assign addon_price = addon_variant.price | money_with_currency
+    else
+      assign addon_price = addon_variant.price | money
+    endif
+
+    assign button_label = block_settings.button_label | default: 'Add to Cart'
+    if addon_variant.available
+      assign can_add_addon = true
+      assign button_text = button_label | append: '&nbsp;&nbsp;|&nbsp;&nbsp;' | append: addon_price
+    else
+      assign can_add_addon = false
+      assign button_text = 'Sold out'
+    endif
+  -%}
+
+  {% render 'add-to-cart-button-styles' %}
+
+  <div
+    class="popular-add-on"
+    style="--padding-block-start: {{ block_settings.padding-block-start | default: 0 }}px; --padding-block-end: {{ block_settings.padding-block-end | default: 0 }}px; --chip-color: {{ chip_color }};"
+    {{ block.shopify_attributes }}
+  >
+    {%- if block_settings.heading != blank -%}
+      <p class="popular-add-on__heading">{{ block_settings.heading }}</p>
+    {%- endif -%}
+
+    <div class="popular-add-on__card">
+      <div class="popular-add-on__content">
+        {%- if addon_image != blank -%}
+          <a
+            href="{{ addon_product.url }}"
+            class="popular-add-on__media"
+          >
+            {{
+              addon_image
+              | image_url: width: 240
+              | image_tag:
+                widths: '120,160,240',
+                sizes: '81px',
+                loading: 'lazy',
+                alt: addon_image.alt,
+                class: 'popular-add-on__image'
+            }}
+          </a>
+        {%- endif -%}
+
+        <div class="popular-add-on__details">
+          <a
+            href="{{ addon_product.url }}"
+            class="popular-add-on__title"
+          >
+            {{- addon_product.title -}}
+          </a>
+
+          {%- unless addon_product.has_only_default_variant -%}
+            <div class="popular-add-on__meta">
+              {%- if addon_variant.option1 != blank -%}
+                <span class="popular-add-on__option">
+                  <span class="popular-add-on__chip" aria-hidden="true"></span>
+                  <span class="popular-add-on__option-text">{{ addon_variant.option1 }}</span>
+                </span>
+              {%- endif -%}
+              {%- if addon_variant.option2 != blank -%}
+                <span class="popular-add-on__option-text">{{ addon_variant.option2 }}</span>
+              {%- endif -%}
+            </div>
+          {%- endunless -%}
+        </div>
+      </div>
+
+      <product-form-component
+        class="popular-add-on__form"
+        data-section-id="{{ section.id }}"
+        data-product-id="{{ addon_product.id }}"
+        data-product-url="{{ addon_product.url }}"
+        data-quantity-default="1"
+        data-quantity-error-max="This item has a maximum of {{ addon_variant.quantity_rule.max | default: 0 }}"
+        on:submit="/handleSubmit"
+      >
+        <div
+          class="visually-hidden"
+          aria-live="assertive"
+          role="status"
+          aria-atomic="true"
+          ref="liveRegion"
+        ></div>
+        {%- form 'product', addon_product, id: form_id, data-type: 'add-to-cart-form' -%}
+          <input
+            type="hidden"
+            name="id"
+            ref="variantId"
+            value="{{ addon_variant.id }}"
+          >
+          <input
+            type="hidden"
+            name="quantity"
+            value="1"
+          >
+          <div
+            class="product-form-buttons popular-add-on__buttons"
+            ref="productFormButtons"
+          >
+            <span
+              class="product-form-text__error hidden"
+              ref="addToCartTextError"
+            >
+              <span class="svg-wrapper">
+                {{- 'icon-error.svg' | inline_asset_content -}}
+              </span>
+            </span>
+            {% render 'add-to-cart-button',
+              id: button_id,
+              class: 'popular-add-on__button',
+              can_add_to_cart: can_add_addon,
+              show_icon: false,
+              product: addon_product,
+              add_to_cart_text: button_text,
+              data_testid: 'popular-add-on-add-to-cart'
+            %}
+          </div>
+        {%- endform -%}
+      </product-form-component>
+    </div>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .popular-add-on {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    padding-block: var(--padding-block-start, 0px) var(--padding-block-end, 0px);
+    color: #231F20;
+  }
+
+  .popular-add-on__heading {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 18px;
+    letter-spacing: 0.14px;
+  }
+
+  .popular-add-on__card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    background-color: #FFFFFF;
+    border: 1px solid #231F20;
+  }
+
+  .popular-add-on__content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+    padding: 0 6px;
+  }
+
+  .popular-add-on__media {
+    display: block;
+    flex: 0 0 81px;
+    width: 81px;
+    height: 86px;
+  }
+
+  .popular-add-on__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .popular-add-on__details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .popular-add-on__title {
+    font-family: var(--font-body--family);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    color: #231F20;
+    text-decoration: none;
+    overflow-wrap: break-word;
+  }
+
+  .popular-add-on__title:hover {
+    text-decoration: underline;
+  }
+
+  .popular-add-on__meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .popular-add-on__option {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .popular-add-on__chip {
+    display: inline-block;
+    flex: 0 0 13px;
+    width: 13px;
+    height: 13px;
+    border-radius: 2px;
+    border: 1px solid #231F20;
+    background-color: var(--chip-color, #99D9D9);
+  }
+
+  .popular-add-on__option-text {
+    font-family: var(--font-body--family);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 18px;
+    letter-spacing: 0.14px;
+  }
+
+  .popular-add-on__form {
+    display: block;
+    width: 100%;
+  }
+
+  .popular-add-on__form form {
+    width: 100%;
+  }
+
+  .popular-add-on__buttons {
+    width: 100%;
+  }
+
+  .popular-add-on__buttons add-to-cart-component {
+    display: block;
+    width: 100%;
+  }
+
+  .popular-add-on .popular-add-on__button {
+    width: 100%;
+    min-height: 40px;
+    padding: 12px 24px;
+    background: transparent;
+    border: 1px solid #14495B;
+    border-radius: 0;
+    color: #14495B;
+    font-family: var(--font-body--family);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 16px;
+    text-transform: none;
+    box-shadow: none;
+  }
+
+  .popular-add-on .popular-add-on__button:hover {
+    background: #14495B;
+    color: #FFFFFF;
+  }
+
+  .popular-add-on .popular-add-on__button:disabled,
+  .popular-add-on .popular-add-on__button[aria-disabled='true'] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media screen and (min-width: 750px) {
+    .popular-add-on__card {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 32px 16px 16px;
+    }
+
+    .popular-add-on__content {
+      gap: 18px;
+    }
+
+    .popular-add-on__media {
+      flex-basis: 75px;
+      width: 75px;
+      height: 80px;
+    }
+
+    .popular-add-on__details {
+      gap: 10px;
+    }
+
+    .popular-add-on__form,
+    .popular-add-on__buttons,
+    .popular-add-on__buttons add-to-cart-component {
+      width: auto;
+      flex-shrink: 0;
+    }
+
+    .popular-add-on .popular-add-on__button {
+      width: auto;
+      white-space: nowrap;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Popular add-on",
+  "tag": null,
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Add-on product"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Popular Add-on"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Add to Cart"
+    },
+    {
+      "type": "color",
+      "id": "chip_color",
+      "label": "Chip color",
+      "default": "#99D9D9"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Popular add-on",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}
